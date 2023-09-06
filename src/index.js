@@ -16,7 +16,18 @@ app.get('/getUsers', (request, reply) => {
     return filteredUsers;
  })
 
+app.get('/getUser/:id', (request, reply) => {
+    const id = parseInt(request.params.id, 10)
+
+    const user = users.find(user => user.id == id)
+
+    return user || reply.status(404).send({
+        msg: "User not found"
+    })
+})
+
  // domain.com/getUsers?gender=male
+ // twitter.com/username
 
 app.listen(PORT).catch((error) => {
     app.log.error(error)
