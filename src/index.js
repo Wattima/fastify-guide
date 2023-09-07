@@ -1,10 +1,26 @@
+const Ajv = require("ajv")
+
+const ajv = new Ajv({
+    // removeAdditional: true,
+
+    coerceTypes: false,
+
+})
+
 const fastify = require("fastify")
-
-
 
 const app = fastify({logger:true})
 
-app.register(require('./routers'))
+app.setValidatorCompiler(({ schema, method, url, httpPart }) => {
+    return ajv.compile(schema)
+})
+
+app.register(require('fastify-formbody'))
+
+app.register(require('./routers'), {
+    prefix: '/api',
+})
+
 
 
 const PORT = process.env.PORT || 8000
